@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
+use App\Post;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\JWTAuth;
 
@@ -14,7 +16,8 @@ class ProfileController extends Controller
         $this->auth = $auth;
     }
 
-    public function profile (Request $request){
+    public function profile(Request $request)
+    {
         return response()->json([
             "success" => true,
             "data" => [
@@ -23,14 +26,19 @@ class ProfileController extends Controller
         ], 200);
     }
 
-    public function posts (Request $request){
+
+    public function allPosts(Request $request)
+    {
+        $posts = Post::latest()->with("user")->paginate(10);
         return response()->json([
             "success" => true,
-            "data" => $request->user()->posts
+            "data" => $posts
         ], 200);
     }
 
-    public function logout (Request $request){
+
+    public function logout(Request $request)
+    {
         $this->auth->invalidate();
         return response()->json([
             "success" => true,

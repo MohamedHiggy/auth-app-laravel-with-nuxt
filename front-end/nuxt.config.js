@@ -56,7 +56,7 @@ export default {
     },
     // Axios module configuration (https://go.nuxtjs.dev/config-axios)
     axios: {
-        baseURL: "http://localhost/auth-nuxt/public/api/v1"
+        baseURL: "http://localhost/api/v1"
     },
 
     // Build Configuration (https://go.nuxtjs.dev/config-build)

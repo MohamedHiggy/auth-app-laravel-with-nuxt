@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Tymon\JWTAuth\JWTAuth;
 
 class AuthController extends Controller
@@ -69,6 +70,28 @@ class AuthController extends Controller
             "success" => true,
             "data" => $user,
             "token" => $token
+        ], 200);
+    }
+
+    public function resetPassword(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            "email" => ["required", "email", "max:255", "exists:users,email"]
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                "success" => false,
+                "errors" => $validator->errors()
+            ], 422);
+        }
+
+        Password::sendResetLink($validator->validated());
+
+        return response()->json([
+            "success" => true,
+            "msg" => "success"
         ], 200);
     }
 }
