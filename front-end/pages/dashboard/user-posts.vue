@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="pt-5">
-      <template v-if="$auth.user.posts == 0" class="text-center">
+      <template v-if="$store.state.userPosts == 0" class="text-center">
         <h2 class="text-center">user has no posts</h2>
       </template>
       <template v-else>

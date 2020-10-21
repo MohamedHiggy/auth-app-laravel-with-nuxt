@@ -42,7 +42,12 @@
               </p>
             </div>
             <div class="form-group">
-              <button class="btn btn-dark w-100" type="submit">Login</button>
+
+              <button class="btn btn-dark w-100" type="button" disabled v-if="Loading">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Loading...
+              </button>
+              <button class="btn btn-dark w-100" type="submit"  v-else>Login</button>
             </div>
           </form>
         </div>
@@ -56,6 +61,7 @@ export default {
   name: "login",
   data() {
     return {
+      Loading:false,
       passwordFieldType: "password",
       form: {
         email: "",
@@ -65,17 +71,16 @@ export default {
   },
   methods: {
     async login() {
+      this.Loading = true;
       try {
         await this.$auth.login({ data: this.form });
         this.$router.push(
           this.$route.query.redirect ? this.$route.query.redirect : "/"
         );
+        this.Loading = false;
       }
       catch (e) {
         return;
-        this.$router.push(
-          this.$route.query.redirect ? this.$route.query.redirect : "/auth/login"
-        );
       }
     },
     switchVisibility() {

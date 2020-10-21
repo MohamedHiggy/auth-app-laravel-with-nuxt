@@ -13,7 +13,56 @@
             <nuxt-link to="/dashboard/user-posts" class="btn btn-primary">
               go back to your posts
             </nuxt-link>
+            <ul class="list-style">
+              <li class="list">
+                <nuxt-link
+                  :to="`/dashboard/${$store.state.userSelectedPost.id}/edit-post`"
+                  class="btn btn-info btn-sm"
+                >
+                  Edit
+                </nuxt-link>
+              </li>
+              <li class="list">
+                <button class="btn btn-danger btn-sm" @click="modal = !modal">
+                  Delete
+                </button>
+              </li>
+            </ul>
           </div>
+        </div>
+      </div>
+      <div class="card deleted-model" v-if="modal">
+        <div class="card-body">
+          <h5 class="card-title">Are you sure to delete this post ?</h5>
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            @click="modal = !modal"
+          >
+            Cancel
+          </button>
+
+          <button
+            class="btn btn-outline-danger"
+            type="button"
+            disabled
+            v-if="Loading"
+          >
+            <span
+              class="spinner-border spinner-border-sm"
+              role="status"
+              aria-hidden="true"
+            ></span>
+            Loading...
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-danger"
+            @click="deletePost($store.state.userSelectedPost.id)"
+            v-else
+          >
+            Yes
+          </button>
         </div>
       </div>
     </div>
@@ -23,6 +72,12 @@
 <script>
 export default {
   middleware: "auth",
+  data() {
+    return {
+      Loading: false,
+      modal: false
+    };
+  },
   validate({ params }) {
     return !isNaN(params.id);
   },
@@ -35,8 +90,42 @@ export default {
       return true;
     return $axios.$get(`/posts/${params.id}`).then(res => {
       store.commit("updateSelectedPost", res.data);
-      console.log(res)
     });
+  },
+  methods: {
+    deletePost(postId) {
+      this.Loading = true;
+      this.$store
+        .dispatch("deletePost", postId)
+        .then(res => {
+          this.$router.push("/dashboard/user-posts");
+        })
+        .finally(() => {
+          this.Loading = false;
+        });
+    }
   }
 };
 </script>
+
+<style scoped>
+.list-style {
+  list-style: none;
+  padding: 10px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  width: auto;
+}
+.list {
+  margin: 5px;
+}
+.deleted-model {
+  transition: 0.6s ease-in-out;
+  text-align: center;
+  width: 35%;
+  margin: 50px auto;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1), 1px 2px 8px rgba(0, 0, 0, 0.1);
+}
+</style>

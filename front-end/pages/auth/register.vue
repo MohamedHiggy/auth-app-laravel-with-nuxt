@@ -54,7 +54,11 @@
               </p>
             </div>
             <div class="form-group">
-              <button class="btn btn-dark w-100" type="submit">Register</button>
+              <button class="btn btn-dark w-100" type="button" disabled v-if="Loading">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Loading...
+              </button>
+              <button class="btn btn-dark w-100" type="submit" v-else>Register</button>
             </div>
           </form>
           <div class="text-center" style="margin-top: 20px">
@@ -71,6 +75,7 @@ export default {
   name: "Register",
   data() {
     return {
+      Loading:false,
       passwordFieldType: 'password',
       form: {
         name: "",
@@ -81,8 +86,10 @@ export default {
   },
   methods: {
     async register() {
+        this.Loading = true;
       try {
         await this.$axios.post("register", this.form);
+        this.Loading = false;
       } catch (e) {
         return;
       }

@@ -18,6 +18,11 @@
           <li class="nav-item">
             <nuxt-link to="/" class="nav-link">Home</nuxt-link>
           </li>
+            <template v-if="$auth.loggedIn">
+              <li class="nav-item">
+                <nuxt-link to="/dashboard/add-post" class="btn btn-outline-info btn-sm mt-1">Add post</nuxt-link>
+              </li>
+            </template>
         </ul>
         <!--right nav-->
         <ul class="navbar-nav ml-auto">
