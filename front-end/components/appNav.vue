@@ -31,6 +31,9 @@
               <nuxt-link to="/dashboard" class="nav-link">Dashboard</nuxt-link>
             </li>
             <li class="nav-item">
+              <nuxt-link to="/dashboard/setting" class="nav-link">Settings</nuxt-link>
+            </li>
+            <li class="nav-item">
               <a href="#" class="nav-link disabled">{{$auth.user.name}}</a>
             </li>
             <li class="nav-item">

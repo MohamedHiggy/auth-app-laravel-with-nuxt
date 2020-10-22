@@ -74,13 +74,11 @@ export default {
       this.Loading = true;
       try {
         await this.$auth.login({ data: this.form });
-        this.$router.push(
-          this.$route.query.redirect ? this.$route.query.redirect : "/"
-        );
         this.Loading = false;
+        this.$router.push(his.$route.query.redirect ? this.$route.query.redirect : "/");
       }
       catch (e) {
-        return;
+        this.Loading = false;
       }
     },
     switchVisibility() {
@@ -99,7 +97,7 @@ export default {
   background-color: transparent;
   position: absolute;
   top: 35px;
-  right: 15px;
+  right: 25px;
   border-radius: 15px;
   border: none;
 }

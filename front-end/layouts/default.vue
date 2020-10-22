@@ -8,7 +8,7 @@
 import navbar from "@/components/appNav"
 export default {
   components: {
-    navbar
+    navbar,
   }
 }
 </script>

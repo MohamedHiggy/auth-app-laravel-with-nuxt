@@ -3,7 +3,7 @@
     <div class="col-md-6 offset-md-3">
       <div class="card mt-4">
         <div class="card-header">
-          <h2 class="title mb-0 text-center">post</h2>
+            <h2 class="title mb-0 text-center">{{btnText}} post</h2>
         </div>
         <div class="card-body">
           <form @submit.prevent="sendData">
@@ -50,7 +50,7 @@
                 Loading...
               </button>
               <button class="btn btn-dark w-100" type="submit" v-else>
-                Submit
+                {{btnText}}
               </button>
             </div>
           </form>
@@ -76,7 +76,7 @@ export default {
       return +this.$route.params.id;
     },
     btnText() {
-      return this.postId ? "Edit" : "submit";
+      return this.postId ? "Edit" : "Add";
     }
   },
   mounted() {

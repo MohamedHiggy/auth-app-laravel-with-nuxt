@@ -1,15 +1,27 @@
 export default {
     state: () => ({
         userPosts: [],
-        userSelectedPost: {}
+        allPosts: [],
+        userSelectedPost: {},
+        userData: []
     }),
     mutations: {
+        //update usr data
+        updateUserData(state, userData) {
+            state.userData = userData;
+        },
+        //update posts of user
         updatePosts(state, userPosts) {
             state.userPosts = userPosts;
         },
+        //update all posts of all user in index.vue
+        updateAllPosts(state, allPosts) {
+            state.allPosts = allPosts;
+        },
+        //update single post of user
         updateSelectedPost(state, post) {
             state.userSelectedPost = post;
-        }
+        },
     },
     actions: {
         addPost({ state, commit }, payload) {
@@ -28,6 +40,10 @@ export default {
             })
         },
         getPost({ state }, postId) {
+            const post = state.userPosts.find(item => item.id == postId);
+            return post ? Promise.resolve(post) : this.$axios.$get(`/posts/${postId}`);
+        },
+        getUserData({ state }, postId) {
             const post = state.userPosts.find(item => item.id == postId);
             return post ? Promise.resolve(post) : this.$axios.$get(`/posts/${postId}`);
         }

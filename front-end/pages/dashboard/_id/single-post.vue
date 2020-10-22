@@ -16,7 +16,9 @@
             <ul class="list-style">
               <li class="list">
                 <nuxt-link
-                  :to="`/dashboard/${$store.state.userSelectedPost.id}/edit-post`"
+                  :to="
+                    `/dashboard/${$store.state.userSelectedPost.id}/edit-post`
+                  "
                   class="btn btn-info btn-sm"
                 >
                   Edit
@@ -31,38 +33,40 @@
           </div>
         </div>
       </div>
-      <div class="card deleted-model" v-if="modal">
-        <div class="card-body">
-          <h5 class="card-title">Are you sure to delete this post ?</h5>
-          <button
-            type="button"
-            class="btn btn-outline-primary"
-            @click="modal = !modal"
-          >
-            Cancel
-          </button>
+      <div class="deleted-model-container" v-if="modal">
+        <div class="card deleted-model">
+          <div class="card-body">
+            <h5 class="card-title">Are you sure to delete this post ?</h5>
+            <button
+              type="button"
+              class="btn btn-outline-primary"
+              @click="modal = !modal"
+            >
+              Cancel
+            </button>
 
-          <button
-            class="btn btn-outline-danger"
-            type="button"
-            disabled
-            v-if="Loading"
-          >
-            <span
-              class="spinner-border spinner-border-sm"
-              role="status"
-              aria-hidden="true"
-            ></span>
-            Loading...
-          </button>
-          <button
-            type="button"
-            class="btn btn-outline-danger"
-            @click="deletePost($store.state.userSelectedPost.id)"
-            v-else
-          >
-            Yes
-          </button>
+            <button
+              class="btn btn-outline-danger"
+              type="button"
+              disabled
+              v-if="Loading"
+            >
+              <span
+                class="spinner-border spinner-border-sm"
+                role="status"
+                aria-hidden="true"
+              ></span>
+              Loading...
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-danger"
+              @click="deletePost($store.state.userSelectedPost.id)"
+              v-else
+            >
+              Yes
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -121,11 +125,20 @@ export default {
 .list {
   margin: 5px;
 }
+.deleted-model-container{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background: rgba(187, 187, 187, 0.78);
+    top: 0;
+    left: 0;
+}
 .deleted-model {
-  transition: 0.6s ease-in-out;
+  height: auto;
+  width: 30%;
   text-align: center;
-  width: 35%;
-  margin: 50px auto;
+  margin: 400px auto;
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1), 1px 2px 8px rgba(0, 0, 0, 0.1);
 }
 </style>
