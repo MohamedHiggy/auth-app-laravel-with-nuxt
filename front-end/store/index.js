@@ -26,17 +26,20 @@ export default {
     actions: {
         addPost({ state, commit }, payload) {
             return this.$axios.$post(`/posts`, payload).then((post) => {
-                commit('updatePosts', [...state.userPosts, post])
+                commit('updatePosts', [...state.userPosts, post]);
+                this.$toast.success('successfuly added');
             })
         },
         deletePost({ state, commit }, postId) {
             return this.$axios.$delete(`/posts/${postId}`).then(() => {
-                commit('updatePosts', state.userPosts.filter(post => post.id != postId))
+                commit('updatePosts', state.userPosts.filter(post => post.id != postId));
+                this.$toast.success('successfuly deleted this post');
             })
         },
         editPost({ state, commit }, payload) {
             return this.$axios.$put(`/posts/${payload.id}`, payload).then((post) => {
-                commit('updatePosts', state.userPosts.map(post => post.id == payload.id ? payload : post))
+                commit('updatePosts', state.userPosts.map(post => post.id == payload.id ? payload : post));
+                this.$toast.success('successfuly edit this post');
             })
         },
         getPost({ state }, postId) {

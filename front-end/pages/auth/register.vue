@@ -86,15 +86,15 @@ export default {
   },
   methods: {
     async register() {
-        this.Loading = true;
+      this.Loading = true;
       try {
         await this.$axios.post("register", this.form);
         this.Loading = false;
+        this.$toast.success('successfuly created account');
       } catch (e) {
         return;
       }
-      this.$auth.login({data: this.form});
-      this.$router.push({ name: "index" });
+      this.$router.push("/auth/login");
     },
     switchVisibility() {
       this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password'

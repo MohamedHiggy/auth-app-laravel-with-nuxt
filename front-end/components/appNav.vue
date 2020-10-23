@@ -62,6 +62,7 @@ export default {
   methods: {
     signOut() {
       this.$auth.logout();
+      this.$toast.success('logged out successfuly');
     },
   },
 };

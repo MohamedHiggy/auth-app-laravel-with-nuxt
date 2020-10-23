@@ -21,7 +21,8 @@
                 <span>{{ errors.email[0] }}</span>
               </p>
             </div>
-            <div class="form-group">
+
+            <div class="form-group" >
               <label for="inputpassword">Password</label>
               <input
                 :type="passwordFieldType"
@@ -41,8 +42,8 @@
                 <span>{{ errors.password[0] }}</span>
               </p>
             </div>
-            <div class="form-group">
 
+            <div class="form-group">
               <button class="btn btn-dark w-100" type="button" disabled v-if="Loading">
                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                 Loading...
@@ -73,12 +74,16 @@ export default {
     async login() {
       this.Loading = true;
       try {
-        await this.$auth.login({ data: this.form });
+        let auth = await this.$auth.login({ data: this.form });
         this.Loading = false;
-        this.$router.push(his.$route.query.redirect ? this.$route.query.redirect : "/");
+        if(auth.data.success = true) {
+          this.$toast.success('successfuly authenticated');
+          this.$router.push(this.$route.query.redirect ? this.$route.query.redirect : "/dashboard");
+        }
       }
       catch (e) {
         this.Loading = false;
+        return;
       }
     },
     switchVisibility() {
@@ -110,4 +115,5 @@ export default {
 .show-password:focus {
   outline: none;
 }
+
 </style>

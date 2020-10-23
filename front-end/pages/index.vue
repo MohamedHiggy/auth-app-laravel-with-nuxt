@@ -9,10 +9,14 @@
           <div class="card-header">
             <ul class="list-style">
               <li class="list">
-                <p class="name">{{post.user.name}}</p>
+                <p class="name">Added this post by:
+                  <nuxt-link :to="`/user/${post.user.name}`" class="text-muted">{{post.user.name}}</nuxt-link>
+                </p>
               </li>
               <li class="list">
-                <p class="time">{{post.created_at}}</p>
+                <p class="time">
+                  from : <span class="text-muted">{{ $moment(post.created_at).fromNow() }}</span>
+                </p>
               </li>
             </ul>
           </div>

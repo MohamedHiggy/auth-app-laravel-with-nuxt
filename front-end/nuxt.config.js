@@ -19,7 +19,13 @@ export default {
     components: true,
 
     // Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
-    buildModules: [],
+    buildModules: [
+        '@nuxtjs/moment'
+    ],
+
+    moment: {
+        timezone: true,
+    },
 
     // Modules (https://go.nuxtjs.dev/config-modules)
     modules: [
@@ -28,7 +34,19 @@ export default {
         // https://go.nuxtjs.dev/axios
         "@nuxtjs/axios",
         "@nuxtjs/auth",
+        "@nuxtjs/toast"
     ],
+    toast: {
+        position: 'top-right',
+        duration: 4000,
+        theme: "outline",
+        action: {
+            text: 'cancel',
+            onClick: (e, toastObject) => {
+                toastObject.goAway(0);
+            }
+        }
+    },
     // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
     plugins: [
         "./plugins/mixins/validation",
