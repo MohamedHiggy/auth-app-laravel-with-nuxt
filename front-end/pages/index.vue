@@ -18,6 +18,18 @@
                   from : <span class="text-muted">{{ $moment(post.created_at).fromNow() }}</span>
                 </p>
               </li>
+              <li class="list">
+              <button class="btn btn-outline-info btn-sm" type="button" disabled v-if="Loading">
+                <span
+                  class="spinner-border spinner-border-sm"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+                saving...
+              </button>
+
+                <button @click="savePost" class="btn btn-outline-info btn-sm">Save post</button>
+              </li>
             </ul>
           </div>
           <div class="card-body">
@@ -43,6 +55,7 @@ export default {
   name: "index",
   data() {
     return {
+      Loading: false,
       page: 1,
     }
   },
@@ -50,6 +63,11 @@ export default {
     return $axios.$get(`/allposts?page=${this.page}`).then(res=> {
       store.commit("updateAllPosts", res.data.data);
     })
+  },
+  methods: {
+    savePost() {
+      console.log("saved")
+    }
   },
 };
 </script>
