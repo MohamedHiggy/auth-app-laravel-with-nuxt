@@ -45,10 +45,16 @@
                 placeholder="Password"
                 id="inputpassword"
                 v-model="form.password"
-                :type="passwordFieldType"
+                :type="show === true ? 'text' : 'password'"
                 required
               />
-              <button class="show-password" type="button" @click="switchVisibility"><img src="@/assets/show-password.svg" alt=""></button>
+              <div class="strength" :class="'level_' + strengthLevel"></div>
+              <i class="fas fa-eye show-icon" v-if="show" @click="show = !show"></i>
+              <i class="fas fa-eye-slash hide-icon" v-else  @click="show = !show"></i>
+              <i class="fas fa-frown level-icon" v-if="strengthLevel === 1"></i>
+              <i class="fas fa-meh level-icon" v-if="strengthLevel === 2"></i>
+              <i class="fas fa-smile level-icon" v-if="strengthLevel === 3"></i>
+              <i class="fas fa-grin-stars level-icon" v-if="strengthLevel === 4"></i>
               <p class="invalid-feedback" v-if="errors.password">
                 <span>{{errors.password[0]}}</span>
               </p>
@@ -76,7 +82,7 @@ export default {
   data() {
     return {
       Loading:false,
-      passwordFieldType: 'password',
+      show: false,
       form: {
         name: "",
         email: "",
@@ -96,32 +102,127 @@ export default {
       }
       this.$router.push("/auth/login");
     },
-    switchVisibility() {
-      this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password'
+  },
+
+  computed: {
+    scorePassword() {
+      let score = 0;
+      if (this.form.password === '') return score;
+      let letters = {};
+      for (let i = 0; i < this.form.password.length; i++) {
+        letters[this.form.password[i]] = (letters[this.form.password[i]] || 0) + 1;
+        score += 5.0 / letters[this.form.password[i]];
+      }
+      let variations = {
+        digits: /\d/.test(this.form.password),
+        lower: /[a-z]/.test(this.form.password),
+        upper: /[A-Z]/.test(this.form.password),
+        special: /\W/.test(this.form.password)
+      }
+      let variationCount = 0;
+      for (let check in variations) {
+        variationCount += (variations[check] == true) ? 1 : 0;
+      }
+      score += (variationCount - 1) * 10;
+      return parseInt(score);
+    },
+    strengthLevel() {
+      let pass = this.scorePassword;
+      if(pass === 0) return 0;
+      if(pass < 25) return 1;
+      if(pass < 50) return 2;
+      if(pass < 75) return 3;
+      if(pass >= 75) return 4;
     }
   }
 };
 </script>
 
 <style scoped>
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css");
 .form-group {
   position: relative;
-}
-.show-password{
-  background-color: transparent;
-  position: absolute;
-  top: 35px;
-  right: 15px;
-  border-radius: 15px;
-  border: none;
-}
-
-.show-password img{
-  width: 100%;
-  height: 100%;
 }
 
 .show-password:focus{
   outline: none;
 }
+.form-control {
+  position: relative;
+  z-index: 10 !important;
+}
+
+.strength {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: block;
+  width: 25%;
+  height: 50%;
+  background-color: #a5df41;
+  border-radius: 40px;
+  overflow: hidden;
+  z-index: 9;
+  transition: all .5s linear;
+}
+
+.level_0 {
+  bottom: 0;
+  width: 25%;
+  background-color: #BB4440;
+}
+
+.level_1 {
+  bottom: -10px;
+  width: 25%;
+  background-color: #BB4440;
+}
+
+.level_2 {
+  bottom: -10px;
+  width: 50%;
+  background-color: #E17D30;
+}
+
+.level_3 {
+  bottom: -10px;
+  width: 75%;
+  background-color: #F0B03F;
+}
+
+.level_4 {
+  bottom: -10px;
+  width: 100%;
+  background-color: #a5df41;
+}
+
+.level-icon {
+  font-size: 22px;
+  position: absolute;
+  right: 20px;
+  top: 40px;
+  z-index: 11;
+}
+
+.show-icon {
+  font-size: 22px;
+  position: absolute;
+  right: 50px;
+  top: 40px;
+  z-index: 11;
+  cursor: pointer;
+}
+
+.hide-icon {
+  font-size: 22px;
+  position: absolute;
+  right: 50px;
+  top: 40px;
+  z-index: 11;
+  cursor: pointer;
+  color: #555;
+}
+
+
 </style>

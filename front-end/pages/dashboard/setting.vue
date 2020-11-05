@@ -43,6 +43,7 @@
                 </button>
               </div>
             </form>
+          {{userData}}
           </div>
         </div>
       </div>
@@ -51,7 +52,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapGetters } from 'vuex'
 export default {
   middleware: "auth",
   name: "updateUser",
@@ -64,17 +65,13 @@ export default {
       }
     };
   },
-
-  methods: {
-    updateUserData() {
-      console.log(this.userdata);
-    }
+  mounted() {
+    console.log(this.userData)
   },
   computed: {
-    ...mapState(["auth"]),
-    getUserData() {
-      return this.auth
-    },
+    ...mapGetters(["userData"])
+  },
+  methods: {
   },
 };
 </script>

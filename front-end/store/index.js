@@ -18,6 +18,11 @@ export default {
             state.allPosts = allPosts;
         },
     },
+    getters: {
+        userData(state) {
+            return state.auth.user;
+        },
+    },
     actions: {
         addPost({ state, commit }, payload) {
             return this.$axios.$post(`/posts`, payload).then((post) => {

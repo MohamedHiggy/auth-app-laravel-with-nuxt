@@ -21,28 +21,22 @@
                 <span>{{ errors.email[0] }}</span>
               </p>
             </div>
-
             <div class="form-group" >
               <label for="inputpassword">Password</label>
               <input
-                :type="passwordFieldType"
+                :type="show === true ? 'text' : 'password'"
                 class="form-control"
                 :class="{ 'is-invalid': errors.password }"
                 placeholder="Password"
                 id="inputpassword"
                 v-model="form.password"
-              /><button
-                class="show-password"
-                type="button"
-                @click="switchVisibility"
-              >
-                <img src="@/assets/show-password.svg" alt="" />
-              </button>
+              />
+              <i class="fas fa-eye show-icon" v-if="show" @click="show = !show"></i>
+              <i class="fas fa-eye-slash hide-icon" v-else  @click="show = !show"></i>
               <p class="invalid-feedback" v-if="errors.password">
                 <span>{{ errors.password[0] }}</span>
               </p>
             </div>
-
             <div class="form-group">
               <button class="btn btn-dark w-100" type="button" disabled v-if="Loading">
                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -51,6 +45,9 @@
               <button class="btn btn-dark w-100" type="submit"  v-else>Login</button>
             </div>
           </form>
+          <div class="text-center" style="margin-top: 20px">
+            Not have account? <nuxt-link to="/auth/register">Register</nuxt-link>
+          </div>
         </div>
       </div>
     </div>
@@ -63,6 +60,7 @@ export default {
   data() {
     return {
       Loading:false,
+      show: false,
       passwordFieldType: "password",
       form: {
         email: "",
@@ -95,6 +93,7 @@ export default {
 </script>
 
 <style scoped>
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css");
 .form-group {
   position: relative;
 }
@@ -114,6 +113,25 @@ export default {
 
 .show-password:focus {
   outline: none;
+}
+
+.show-icon {
+  font-size: 22px;
+  position: absolute;
+  right: 30px;
+  top: 40px;
+  z-index: 11;
+  cursor: pointer;
+}
+
+.hide-icon {
+  font-size: 22px;
+  position: absolute;
+  right: 30px;
+  top: 40px;
+  z-index: 11;
+  cursor: pointer;
+  color: #555;
 }
 
 </style>

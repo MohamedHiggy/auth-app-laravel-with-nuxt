@@ -14,7 +14,7 @@ export default {
   middleware: "auth",
   computed: {
     ...mapState(["auth"])
-  },
+  }
 };
 </script>
 

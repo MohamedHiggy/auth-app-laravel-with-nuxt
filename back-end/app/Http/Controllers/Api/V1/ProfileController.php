@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use App\Post;
+use Faker\Provider\Uuid;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\JWTAuth;
 
@@ -21,7 +22,12 @@ class ProfileController extends Controller
         return response()->json([
             "success" => true,
             "data" => [
-                "user" => $request->user()->load(["posts"])
+                "user" => auth()->user()->load(["posts"]),
+                'avatar' => [
+                    'original' => auth()->user()->avatar,
+                    'thumb' => auth()->user()->avatar_thumb
+                ],
+
             ]
         ], 200);
     }
@@ -43,6 +49,33 @@ class ProfileController extends Controller
         return response()->json([
             "success" => true,
             "msg" => "logged out successfuly"
+        ], 200);
+    }
+
+    public function updateAvatar(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            "avatar" => ["required", "string"],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                "success" => false,
+                "errors" => $validator->errors()
+            ], 422);
+        }
+
+        $avatar = auth()->user()->addMediaFromBase64($request->avatar)
+            ->usingName("avatar")
+            ->usingFileName(Uuid::uuid() . ".png")
+            ->toMediaCollection("avatar");
+
+        return response()->json([
+            "success" => true,
+            "data" => [
+                "original" => $avatar->getFullUrl(),
+                'thumb' => $avatar->getFullUrl('thumb')
+            ]
         ], 200);
     }
 }

@@ -12,6 +12,7 @@ Route::group(['prefix' => 'v1', "namespace" => "Api\V1"], function () {
         Route::get('me', "ProfileController@profile");
         Route::get('allposts', "ProfileController@allPosts");
         Route::match(["PUT", "PATCH"],'updateprofile', "ProfileController@updateProfile");
+        Route::put("update-avatar" , "ProfileController@updateAvatar")->name('update_avatar');
         Route::apiResource("posts", "PostsController");
         Route::post('logout', "ProfileController@logout");
     });
