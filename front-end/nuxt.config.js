@@ -53,6 +53,7 @@ export default {
     plugins: [
         "./plugins/mixins/validation",
         "./plugins/axios",
+        "./plugins/vue-observe-visibility.js",
     ],
     auth: {
         strategies: {

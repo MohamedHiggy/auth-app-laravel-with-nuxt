@@ -1,25 +1,23 @@
 <template>
   <div class="container">
-    <div v-if="allPosts == 0" class="pt-5">
-      <div class="text-center">
-        <h2 class="text-center">There is no posts to load</h2>
-      </div>
-    </div>
-    <div class="row" v-else>
+    <Loading v-if="posts == 0"></Loading>
+    <div class="row">
       <div class="col-md-12 text-center">
         <h2 class="main-title mt-5 mb-5">All posts of all users</h2>
       </div>
-      <div class="col-sm-12 mb-5" v-for="post in allPosts" :key="post.id">
-        <div class="card">
+    </div>
+    <InfiniteScroll :items="posts" @refetch="fetchPosts">
+      <template v-slot:item="{ item }">
+        <div class="card mt-2 mb-2">
           <div class="card-header">
             <ul class="list-style">
               <li class="list">
                 <p class="name">
                   Added this post by:
                   <nuxt-link
-                    :to="`/user/${post.user.name}`"
+                    :to="`/user/${item.user.name}`"
                     class="text-muted"
-                    >{{ post.user.name }}</nuxt-link
+                    >{{ item.user.name }}</nuxt-link
                   >
                 </p>
               </li>
@@ -27,7 +25,7 @@
                 <p class="time">
                   from :
                   <span class="text-muted">{{
-                    $moment(post.created_at).fromNow()
+                    $moment(item.created_at).fromNow()
                   }}</span>
                 </p>
               </li>
@@ -53,62 +51,50 @@
             </ul>
           </div>
           <div class="card-body">
-            <h5 class="card-title">{{ post.title }}</h5>
-            <footer class="blockquote-footer">{{ post.description }}</footer>
+            <h5 class="card-title">{{ item.title }}</h5>
+            <footer class="blockquote-footer">{{ item.description }}</footer>
           </div>
         </div>
-      </div>
-      <div class="col-md-12 text-center">
-        <div
-          class="spinner-grow"
-          style="width: 3rem; height: 3rem"
-          role="status"
-        >
-          <span class="sr-only">Loading...</span>
-        </div>
-      </div>
-    </div>
+      </template>
+    </InfiniteScroll>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import InfiniteScroll from "@/components/InfiniteScroll";
+import Loading from "@/components/loading";
 export default {
   middleware: "auth",
   name: "index",
+  components: {
+    InfiniteScroll,
+    Loading
+  },
   data() {
     return {
       Loading: false,
-      page: 1,
-      scrollTimout: null,
+      posts: [],
+      lastPage: 1,
     };
-  },
-  computed: {
-    ...mapState(["allPosts"]),
-  },
-  fetch({ $axios, store }) {
-    return $axios.$get(`/allposts?page=1`).then((res) => {
-      store.commit("updateAllPosts", res.data.data);
-    });
   },
   methods: {
     savePost() {
       console.log("saved");
     },
+    async fetchPosts(page) {
+      if (page > this.lastPage) {
+        return;
+      }
+      let posts = await this.$axios.$get(
+        `http://localhost/api/v1/allposts?page=${page}`
+      );
+      this.posts.push(...posts.data.data);
+      this.lastPage = posts.data.last_page;
+    },
+  },
+  mounted() {
+    this.fetchPosts(1);
   },
 };
 </script>
 
-<style scoped>
-.list-style {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  justify-content: space-between;
-}
-.list p {
-  margin: 0;
-  font-weight: bold;
-}
-</style>
